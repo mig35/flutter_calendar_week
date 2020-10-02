@@ -69,21 +69,24 @@ class __DateItemState extends State<_DateItem> {
           stream: widget.subject,
           builder: (_, data) {
             /// Set default [Background] of day
-            _defaultBackgroundColor = widget.backgroundColor;
-
-            /// Set default [TextStyle] of day
-            _defaultTextStyle = widget.dateStyle;
+            Color selectedBackgroundColor;
+            TextStyle selectedTextStyle;
 
             /// If today, set [Background] of today
-            if (_compareDate(widget.date, _today)) {
-              _defaultBackgroundColor = widget.todayBackgroundColor;
-            } else if (data != null && !data.hasError && data.hasData) {
+            if (data != null && !data.hasError && data.hasData) {
               final DateTime dateSelected = data.data;
               if (_compareDate(widget.date, dateSelected)) {
-                _defaultBackgroundColor = widget.pressedBackgroundColor;
-                _defaultTextStyle = widget.pressedDateStyle;
+                selectedBackgroundColor = widget.pressedBackgroundColor;
+                selectedTextStyle = widget.pressedDateStyle;
               }
             }
+            if (null == selectedBackgroundColor && _compareDate(widget.date, _today)) {
+              selectedBackgroundColor = widget.todayBackgroundColor;
+            }
+
+            _defaultBackgroundColor = selectedBackgroundColor ?? widget.backgroundColor;
+            _defaultTextStyle = selectedTextStyle ?? widget.dateStyle;
+
             return _body();
           },
         )
