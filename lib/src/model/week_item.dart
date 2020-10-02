@@ -10,4 +10,16 @@ class _WeekItem {
     this.dayOfWeek = const [],
     this.days = const []
   });
+
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is _WeekItem &&
+          runtimeType == other.runtimeType &&
+          month == other.month &&
+          dayOfWeek == other.dayOfWeek &&
+          days == other.days;
+
+  @override
+  int get hashCode => month.hashCode ^ dayOfWeek.hashCode ^ days.hashCode;
 }
