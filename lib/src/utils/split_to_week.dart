@@ -18,15 +18,8 @@ List<_WeekItem> _splitToWeek(
   final List<_WeekItem> _weeks = [];
 
   /// Clone [minDate] object
-  DateTime minDateCloned = DateTime(
-      minDate.year,
-      minDate.month,
-      minDate.day,
-      minDate.hour,
-      minDate.minute,
-      minDate.second,
-      minDate.millisecond,
-      minDate.microsecond);
+  DateTime minDateCloned = DateTime(minDate.year, minDate.month, minDate.day, minDate.hour,
+      minDate.minute, minDate.second, minDate.millisecond, minDate.microsecond);
 
   /// Read from [minDate] to [maxDate]
   while (minDateCloned.compareTo(maxDate) < 1) {
@@ -54,7 +47,25 @@ List<_WeekItem> _splitToWeek(
 
       /// Add the week to list week
       _weeks.add(
-          _WeekItem(month: _months.elementAt(minDateCloned.month - 1), dayOfWeek: List.from(_dayOfWeek), days: List.from(_days)));
+        _WeekItem(
+          monthIndex: _days.first.month,
+          monthName: _months.elementAt(_days.first.month - 1),
+          dayOfWeek: List.from(_dayOfWeek),
+          days: List.from(_days),
+        ),
+      );
+
+      /// This week has both months
+      if (_days.first.month != _days.last.month) {
+        _weeks.add(
+          _WeekItem(
+            monthIndex: _days.last.month,
+            monthName: _months.elementAt(_days.last.month - 1),
+            dayOfWeek: List.from(_dayOfWeek),
+            days: List.from(_days),
+          ),
+        );
+      }
 
       /// Clear list before add new item
       _dayOfWeek.clear();
@@ -66,16 +77,21 @@ List<_WeekItem> _splitToWeek(
   }
 
   /// If [while] about is not end with last day of week, add items less
-  if (count > 1) {
+  if (count > 1 && _days.isNotEmpty) {
     _weeks.add(
-        _WeekItem(dayOfWeek: List.from(_dayOfWeek), days: List.from(_days)));
+      _WeekItem(
+        monthIndex: _days.first.month,
+        monthName: _months.elementAt(_days.first.month - 1),
+        dayOfWeek: List.from(_dayOfWeek),
+        days: List.from(_days),
+      ),
+    );
     _dayOfWeek.clear();
     _days.clear();
   }
 
   /// Fit day to list week
-  if (_weeks.isNotEmpty &&
-      _weeks[_weeks.length - 1].dayOfWeek.length < _maxDayOfWeek) {
+  if (_weeks.isNotEmpty && _weeks[_weeks.length - 1].dayOfWeek.length < _maxDayOfWeek) {
     for (int i = 0; i < _maxDayOfWeek; i++) {
       if (i > _weeks[_weeks.length - 1].dayOfWeek.length - 1) {
         _weeks[_weeks.length - 1].dayOfWeek.add(dayOfWeek[i]);

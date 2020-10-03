@@ -4,6 +4,9 @@ class _DateItem extends StatefulWidget {
   /// Date
   final DateTime date;
 
+  /// Date
+  final double opacity;
+
   /// [TextStyle] of day
   final TextStyle dateStyle;
 
@@ -38,19 +41,21 @@ class _DateItem extends StatefulWidget {
   /// [BehaviorSubject] emit, listen last date pressed
   final BehaviorSubject<DateTime> subject;
 
-  _DateItem(
-      {this.date,
-      this.dateStyle,
-      this.pressedDateStyle,
-      this.backgroundColor = Colors.transparent,
-      this.todayBackgroundColor = Colors.orangeAccent,
-      this.pressedBackgroundColor,
-      this.decorationAlignment = FractionalOffset.center,
-      this.dayShapeBorder,
-      this.onDatePressed,
-      this.onDateLongPressed,
-      this.decoration,
-      this.subject});
+  _DateItem({
+    this.date,
+    this.opacity,
+    this.dateStyle,
+    this.pressedDateStyle,
+    this.backgroundColor = Colors.transparent,
+    this.todayBackgroundColor = Colors.orangeAccent,
+    this.pressedBackgroundColor,
+    this.decorationAlignment = FractionalOffset.center,
+    this.dayShapeBorder,
+    this.onDatePressed,
+    this.onDateLongPressed,
+    this.decoration,
+    this.subject,
+  });
 
   @override
   __DateItemState createState() => __DateItemState();
@@ -98,29 +103,32 @@ class __DateItemState extends State<_DateItem> {
         height: 50,
         alignment: FractionalOffset.center,
         child: GestureDetector(
-          onLongPress: _onLongPressed,
+          onLongPress: null == widget.onDateLongPressed ? null : _onLongPressed,
           child: FlatButton(
               padding: EdgeInsets.all(5),
-              onPressed: _onPressed,
+              onPressed: null == widget.onDatePressed ? null : _onPressed,
               color: _defaultBackgroundColor,
               shape: widget.dayShapeBorder,
-              child: Stack(
-                children: <Widget>[
-                  Positioned(
-                    left: 0,
-                    right: 0,
-                    top: 0,
-                    bottom: 0,
-                    child: FittedBox(
-                      fit: BoxFit.scaleDown,
-                      child: Text(
-                        '${widget.date.day}',
-                        style: _defaultTextStyle,
+              child: Opacity(
+                opacity: widget.opacity,
+                child: Stack(
+                  children: <Widget>[
+                    Positioned(
+                      left: 0,
+                      right: 0,
+                      top: 0,
+                      bottom: 0,
+                      child: FittedBox(
+                        fit: BoxFit.scaleDown,
+                        child: Text(
+                          '${widget.date.day}',
+                          style: _defaultTextStyle,
+                        ),
                       ),
                     ),
-                  ),
-                  _decoration()
-                ],
+                    _decoration()
+                  ],
+                ),
               )),
         ),
       );
@@ -131,15 +139,16 @@ class __DateItemState extends State<_DateItem> {
         left: 0,
         right: 0,
         child: Container(
-            width: 50,
-            height: 12,
-            alignment: widget.decorationAlignment,
-            child: widget.decoration != null
-                ? FittedBox(
-                    fit: BoxFit.scaleDown,
-                    child: widget.decoration,
-                  )
-                : Container()),
+          width: 50,
+          height: 12,
+          alignment: widget.decorationAlignment,
+          child: widget.decoration != null
+              ? FittedBox(
+                  fit: BoxFit.scaleDown,
+                  child: widget.decoration,
+                )
+              : Container(),
+        ),
       );
 
   /// Handler pressed
