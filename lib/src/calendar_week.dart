@@ -417,9 +417,7 @@ class _CalendarWeekState extends State<CalendarWeek> {
           opacity: isCurrentMonth ? 1.0 : widget.notCurrentMonthOpacity ?? 0.5,
           dateStyle: _compareDate(date, _today)
               ? widget.todayDateStyle
-              : date != null && (date.weekday == 6 || date.weekday == 7)
-                  ? widget.weekendsStyle
-                  : widget.dateStyle,
+              : widget.dateStyle,
           pressedDateStyle: widget.pressedDateStyle,
           backgroundColor: widget.dateBackgroundColor,
           todayBackgroundColor: widget.todayBackgroundColor,
