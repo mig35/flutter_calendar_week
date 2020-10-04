@@ -16,14 +16,17 @@ part 'utils/split_to_week.dart';
 
 class CalendarWeekController {
   /// [Callback] update widget
-  Function(DateTime) _widgetJumpToDate;
+  Function(DateTime, {@required bool jumpImmediate}) _widgetJumpToDate;
 
   /// Default init page
   int _currentWeekIndex = 0;
   final List<_WeekItem> _weeks = [];
 
   /// [jumpToDate] show week contain [dateTime] on the screen
-  void jumpToDate(DateTime dateTime) {
+  void jumpToDate(
+    DateTime dateTime, {
+    bool jumpImmediate,
+  }) {
     /// find [_newCurrentWeekIndex] corresponding new [dateTime]
     final _newCurrentWeekIndex = findCurrentWeekIndexByDate(dateTime, _weeks);
 
@@ -32,7 +35,7 @@ class CalendarWeekController {
       _currentWeekIndex = _newCurrentWeekIndex;
 
       /// Call [_widgetJumpToDate] for update Widget
-      _widgetJumpToDate(dateTime);
+      _widgetJumpToDate(dateTime, jumpImmediate: jumpImmediate ?? false);
     }
   }
 }
@@ -234,13 +237,22 @@ class _CalendarWeekState extends State<CalendarWeek> {
 
   CalendarWeekController get _calendarController => widget.controller ?? _defaultCalendarController;
 
-  void _jumToDateHandler(DateTime dateTime) {
+  void _jumToDateHandler(
+    DateTime dateTime, {
+    @required bool jumpImmediate,
+  }) {
     _subject.add(dateTime);
-    _pageController.animateToPage(
-      widget.controller._currentWeekIndex,
-      duration: Duration(milliseconds: 500),
-      curve: Curves.ease,
-    );
+    if (jumpImmediate) {
+      _pageController.jumpToPage(
+        widget.controller._currentWeekIndex,
+      );
+    } else {
+      _pageController.animateToPage(
+        widget.controller._currentWeekIndex,
+        duration: Duration(milliseconds: 500),
+        curve: Curves.ease,
+      );
+    }
   }
 
   @override
