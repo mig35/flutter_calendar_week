@@ -381,17 +381,16 @@ class _CalendarWeekState extends State<CalendarWeek> {
 
   /// Day of week layout
   Widget _dayOfWeek(List<String> dayOfWeek) => Row(
+    mainAxisSize: MainAxisSize.max,
         mainAxisAlignment: MainAxisAlignment.spaceAround,
         children: dayOfWeek.map((value) => _dayOfWeekItem(value)).toList(),
       );
 
   /// Day of week item layout
-  Widget _dayOfWeekItem(String title) => Container(
-        alignment: Alignment.center,
-        child: FittedBox(
-          fit: BoxFit.scaleDown,
-          child: Container(
-            width: 50,
+  Widget _dayOfWeekItem(String title) => Expanded(
+    child: Center(
+          child: FittedBox(
+            fit: BoxFit.scaleDown,
             child: Text(
               title,
               style: widget.weekendsIndexes.indexOf(widget.dayOfWeek.indexOf(title)) != -1
@@ -402,51 +401,54 @@ class _CalendarWeekState extends State<CalendarWeek> {
             ),
           ),
         ),
-      );
+  );
 
   /// Date layout
   Widget _dates(List<DateTime> dates, int monthIndex) => Row(
+        mainAxisSize: MainAxisSize.max,
         mainAxisAlignment: MainAxisAlignment.spaceAround,
         children: dates.map((date) => _dateItem(date, date.month == monthIndex)).toList(),
       );
 
   /// Date item layout
-  Widget _dateItem(DateTime date, bool isCurrentMonth) => _DateItem(
-        date: date,
-        opacity: isCurrentMonth ? 1.0 : widget.notCurrentMonthOpacity ?? 0.5,
-        dateStyle: _compareDate(date, _today)
-            ? widget.todayDateStyle
-            : date != null && (date.weekday == 6 || date.weekday == 7)
-                ? widget.weekendsStyle
-                : widget.dateStyle,
-        pressedDateStyle: widget.pressedDateStyle,
-        backgroundColor: widget.dateBackgroundColor,
-        todayBackgroundColor: widget.todayBackgroundColor,
-        pressedBackgroundColor: widget.pressedDateBackgroundColor,
-        decorationAlignment: () {
-          /// If date is contain in decorations list, use decorations Alignment
-          if (widget.decorations.isNotEmpty) {
-            final List<DecorationItem> matchDate =
-                widget.decorations.where((ele) => _compareDate(ele.date, date)).toList();
-            return matchDate.isNotEmpty
-                ? matchDate[0].decorationAlignment
-                : FractionalOffset.center;
-          }
-          return FractionalOffset.center;
-        }(),
-        dayShapeBorder: widget.dayShapeBorder,
-        onDatePressed: widget.onDatePressed,
-        onDateLongPressed: widget.onDateLongPressed,
-        decoration: () {
-          /// If date is contain in decorations list, use decorations Widget
-          if (widget.decorations.isNotEmpty) {
-            final List<DecorationItem> matchDate =
-                widget.decorations.where((ele) => _compareDate(ele.date, date)).toList();
-            return matchDate.isNotEmpty ? matchDate[0].decoration : null;
-          }
-          return null;
-        }(),
-        subject: _subject,
+  Widget _dateItem(DateTime date, bool isCurrentMonth) => Expanded(
+        child: _DateItem(
+          date: date,
+          opacity: isCurrentMonth ? 1.0 : widget.notCurrentMonthOpacity ?? 0.5,
+          dateStyle: _compareDate(date, _today)
+              ? widget.todayDateStyle
+              : date != null && (date.weekday == 6 || date.weekday == 7)
+                  ? widget.weekendsStyle
+                  : widget.dateStyle,
+          pressedDateStyle: widget.pressedDateStyle,
+          backgroundColor: widget.dateBackgroundColor,
+          todayBackgroundColor: widget.todayBackgroundColor,
+          pressedBackgroundColor: widget.pressedDateBackgroundColor,
+          decorationAlignment: () {
+            /// If date is contain in decorations list, use decorations Alignment
+            if (widget.decorations.isNotEmpty) {
+              final List<DecorationItem> matchDate =
+                  widget.decorations.where((ele) => _compareDate(ele.date, date)).toList();
+              return matchDate.isNotEmpty
+                  ? matchDate[0].decorationAlignment
+                  : FractionalOffset.center;
+            }
+            return FractionalOffset.center;
+          }(),
+          dayShapeBorder: widget.dayShapeBorder,
+          onDatePressed: widget.onDatePressed,
+          onDateLongPressed: widget.onDateLongPressed,
+          decoration: () {
+            /// If date is contain in decorations list, use decorations Widget
+            if (widget.decorations.isNotEmpty) {
+              final List<DecorationItem> matchDate =
+                  widget.decorations.where((ele) => _compareDate(ele.date, date)).toList();
+              return matchDate.isNotEmpty ? matchDate[0].decoration : null;
+            }
+            return null;
+          }(),
+          subject: _subject,
+        ),
       );
 
   @override

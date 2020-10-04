@@ -98,38 +98,38 @@ class __DateItemState extends State<_DateItem> {
       : Container();
 
   /// Body layout
-  Widget _body() => Container(
-        width: 50,
-        height: 50,
-        alignment: FractionalOffset.center,
+  Widget _body() => Center(
         child: GestureDetector(
           onLongPress: null == widget.onDateLongPressed ? null : _onLongPressed,
-          child: FlatButton(
-              padding: EdgeInsets.all(5),
-              onPressed: null == widget.onDatePressed ? null : _onPressed,
-              color: _defaultBackgroundColor,
-              shape: widget.dayShapeBorder,
-              child: Opacity(
-                opacity: widget.opacity,
-                child: Stack(
-                  children: <Widget>[
-                    Positioned(
-                      left: 0,
-                      right: 0,
-                      top: 0,
-                      bottom: 0,
-                      child: FittedBox(
-                        fit: BoxFit.scaleDown,
-                        child: Text(
-                          '${widget.date.day}',
-                          style: _defaultTextStyle,
+          child: AspectRatio(
+            aspectRatio: 1.0,
+            child: FlatButton(
+                padding: EdgeInsets.all(5),
+                onPressed: null == widget.onDatePressed ? null : _onPressed,
+                color: _defaultBackgroundColor,
+                shape: widget.dayShapeBorder,
+                child: Opacity(
+                  opacity: widget.opacity,
+                  child: Stack(
+                    children: <Widget>[
+                      Positioned(
+                        left: 0,
+                        right: 0,
+                        top: 0,
+                        bottom: 0,
+                        child: FittedBox(
+                          fit: BoxFit.scaleDown,
+                          child: Text(
+                            '${widget.date.day}',
+                            style: _defaultTextStyle,
+                          ),
                         ),
                       ),
-                    ),
-                    _decoration()
-                  ],
-                ),
-              )),
+                      _decoration()
+                    ],
+                  ),
+                )),
+          ),
         ),
       );
 
@@ -138,17 +138,12 @@ class __DateItemState extends State<_DateItem> {
         top: 28,
         left: 0,
         right: 0,
-        child: Container(
-          width: 50,
-          height: 12,
-          alignment: widget.decorationAlignment,
-          child: widget.decoration != null
-              ? FittedBox(
-                  fit: BoxFit.scaleDown,
-                  child: widget.decoration,
-                )
-              : Container(),
-        ),
+        child: widget.decoration != null
+            ? FittedBox(
+                fit: BoxFit.scaleDown,
+                child: widget.decoration,
+              )
+            : Container(),
       );
 
   /// Handler pressed
