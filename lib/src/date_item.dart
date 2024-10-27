@@ -27,34 +27,34 @@ class _DateItem extends StatefulWidget {
   final Alignment decorationAlignment;
 
   /// [ShapeBorder] of day
-  final ShapeBorder dayShapeBorder;
+  final OutlinedBorder dayShapeBorder;
 
   /// [Callback] function after pressed on date
-  final void Function(DateTime) onDatePressed;
+  final void Function(DateTime)? onDatePressed;
 
   /// [Callback] function after long pressed on date
-  final void Function(DateTime) onDateLongPressed;
+  final void Function(DateTime)? onDateLongPressed;
 
   /// Decoration [Widget]
-  final Widget decoration;
+  final Widget? decoration;
 
   /// [BehaviorSubject] emit, listen last date pressed
   final BehaviorSubject<DateTime> subject;
 
   _DateItem({
-    this.date,
-    this.opacity,
-    this.dateStyle,
-    this.pressedDateStyle,
+    required this.date,
+    required this.opacity,
+    required this.dateStyle,
+    required this.pressedDateStyle,
     this.backgroundColor = Colors.transparent,
     this.todayBackgroundColor = Colors.orangeAccent,
-    this.pressedBackgroundColor,
+    required this.pressedBackgroundColor,
     this.decorationAlignment = FractionalOffset.center,
-    this.dayShapeBorder,
+    required this.dayShapeBorder,
     this.onDatePressed,
     this.onDateLongPressed,
     this.decoration,
-    this.subject,
+    required this.subject,
   });
 
   @override
@@ -63,39 +63,37 @@ class _DateItem extends StatefulWidget {
 
 class __DateItemState extends State<_DateItem> {
   /// Default [Background] of day
-  Color _defaultBackgroundColor;
+  late Color _defaultBackgroundColor;
 
   /// Default [TextStyle] of day
-  TextStyle _defaultTextStyle;
+  late TextStyle _defaultTextStyle;
 
   @override
-  Widget build(BuildContext context) => widget.date != null
-      ? StreamBuilder(
-          stream: widget.subject,
-          builder: (_, data) {
-            /// Set default [Background] of day
-            Color selectedBackgroundColor;
-            TextStyle selectedTextStyle;
+  Widget build(BuildContext context) => StreamBuilder<DateTime>(
+        stream: widget.subject,
+        builder: (_, data) {
+          /// Set default [Background] of day
+          Color? selectedBackgroundColor;
+          TextStyle? selectedTextStyle;
 
-            /// If today, set [Background] of today
-            if (data != null && !data.hasError && data.hasData) {
-              final DateTime dateSelected = data.data;
-              if (_compareDate(widget.date, dateSelected)) {
-                selectedBackgroundColor = widget.pressedBackgroundColor;
-                selectedTextStyle = widget.pressedDateStyle;
-              }
+          /// If today, set [Background] of today
+          if (data.hasData) {
+            final DateTime? dateSelected = data.data;
+            if (_compareDate(widget.date, dateSelected)) {
+              selectedBackgroundColor = widget.pressedBackgroundColor;
+              selectedTextStyle = widget.pressedDateStyle;
             }
-            if (null == selectedBackgroundColor && _compareDate(widget.date, _today)) {
-              selectedBackgroundColor = widget.todayBackgroundColor;
-            }
+          }
+          if (null == selectedBackgroundColor && _compareDate(widget.date, _today)) {
+            selectedBackgroundColor = widget.todayBackgroundColor;
+          }
 
-            _defaultBackgroundColor = selectedBackgroundColor ?? widget.backgroundColor;
-            _defaultTextStyle = selectedTextStyle ?? widget.dateStyle;
+          _defaultBackgroundColor = selectedBackgroundColor ?? widget.backgroundColor;
+          _defaultTextStyle = selectedTextStyle ?? widget.dateStyle;
 
-            return _body();
-          },
-        )
-      : Container();
+          return _body();
+        },
+      );
 
   /// Body layout
   Widget _body() => Center(
@@ -103,11 +101,13 @@ class __DateItemState extends State<_DateItem> {
           onLongPress: null == widget.onDateLongPressed ? null : _onLongPressed,
           child: AspectRatio(
             aspectRatio: 1.0,
-            child: FlatButton(
-                padding: EdgeInsets.all(5),
+            child: TextButton(
                 onPressed: null == widget.onDatePressed ? null : _onPressed,
-                color: _defaultBackgroundColor,
-                shape: widget.dayShapeBorder,
+                style: TextButton.styleFrom(
+                  backgroundColor: _defaultBackgroundColor,
+                  shape: widget.dayShapeBorder,
+                  padding: EdgeInsets.all(5),
+                ),
                 child: Opacity(
                   opacity: widget.opacity,
                   child: Stack(
@@ -149,12 +149,12 @@ class __DateItemState extends State<_DateItem> {
   /// Handler pressed
   void _onPressed() {
     widget.subject.add(widget.date);
-    widget.onDatePressed(widget.date);
+    widget.onDatePressed!.call(widget.date);
   }
 
   /// Handler long pressed
   void _onLongPressed() {
     widget.subject.add(widget.date);
-    widget.onDateLongPressed(widget.date);
+    widget.onDateLongPressed!.call(widget.date);
   }
 }

@@ -6,8 +6,8 @@ class DecorationItem {
   final Alignment decorationAlignment;
 
   DecorationItem({
-    this.decoration,
-    this.date,
+    required this.decoration,
+    required this.date,
     this.decorationAlignment = FractionalOffset.center,
   });
 }

@@ -4,13 +4,13 @@ class _WeekItem {
   final int monthIndex;
   final String monthName;
   final List<String> dayOfWeek;
-  final List<DateTime> days;
+  final List<DateTime?> days;
 
   _WeekItem({
-    @required this.monthIndex,
-    @required this.monthName,
-    @required this.dayOfWeek,
-    @required this.days,
+    required this.monthIndex,
+    required this.monthName,
+    required this.dayOfWeek,
+    required this.days,
   });
 
   @override
