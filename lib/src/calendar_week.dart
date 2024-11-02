@@ -277,7 +277,7 @@ class _CalendarWeekState extends State<CalendarWeek> {
       weeks.clear();
       weeks.addAll(newWeeks);
 
-      final DateTime? latestValue = _subject.valueOrNull;
+      final DateTime? latestValue = _subject.valueWrapper?.value;
       _calendarController
         .._currentWeekIndex = findCurrentWeekIndexByDate(latestValue ?? _today, weeks)
         .._weeks.clear()
